@@ -1,15 +1,15 @@
 {
   "manifest_version": 2,
 
-  "name": "turbo-octo-meme",
-  "description": "A better bookmark manager",
+  "name": "mustached-happiness",
+  "description": "tab management made better",
   "minimum_chrome_version": "23",
   "version": "1.0",
   "content_scripts": [
     {
       "matches": ["<all_urls>"],
-      "css": ["styles/styles.css"],
-      "js": ["scripts/scripts.js"],
+      "css": ["dist/styles/styles.css"],
+      "js": ["dist/scripts/scripts.js"],
       "run_at": "document_end"
     }
   ],
@@ -24,8 +24,7 @@
   },
   "background": {
     "scripts": [
-      "./lib/underscore-min.js",
-      "extension.js"
+      "dist/scripts/extension.js"
     ]
   },
   "icons": {
