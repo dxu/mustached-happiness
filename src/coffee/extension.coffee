@@ -6,7 +6,11 @@ chrome.runtime.onMessage.addListener ({command}, sender, sendResponse) ->
   switch command
     when "move left"
       console.log "move left"
+      chrome.tabs.move tab.id, index: tab.index - 1, (tab) ->
+        console.log tab
 
 
     when "move right"
       console.log "move right"
+      chrome.tabs.move tab.id, index: tab.index + 1, (tab) ->
+        console.log tab

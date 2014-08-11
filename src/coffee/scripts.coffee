@@ -10,8 +10,14 @@ window.onkeyup = (evt) ->
       setTimeout (-> escape = false), 500
     when 68
       console.log "d"
+      if escape
+        evt.preventDefault()
+        sendMessage command: 'move right'
     when 65
       console.log "s"
+      if escape
+        evt.preventDefault()
+        sendMessage command: 'move left'
 
 
 
