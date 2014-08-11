@@ -23,9 +23,9 @@ module.exports = (grunt) ->
     less:
       src:
         expand: true
-        cwd: 'src/stylesheets'
+        cwd: 'src/less'
         src: '**/*.less'
-        dest: 'src/dist/stylesheets'
+        dest: 'src/dist/styles'
         ext: '.css'
     clean: ['dist/']
 
@@ -38,6 +38,6 @@ module.exports = (grunt) ->
   grunt.loadNpmTasks 'grunt-contrib-clean'
 
 
-  grunt.registerTask 'build', ['copy:src', 'coffee:src', 'less:src']
+  grunt.registerTask 'build', ['coffee:src', 'less:src']
   grunt.registerTask 'dev', 'concurrent:dev'
 
