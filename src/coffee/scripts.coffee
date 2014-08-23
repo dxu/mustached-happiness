@@ -33,6 +33,11 @@ window.onkeyup = (evt) ->
       if escape
         evt.preventDefault()
         sendMessage command: 'move up'
+    # when 69
+    #   console.log ""
+    #   if escape
+    #     evt.preventDefault()
+    #     sendMessage command: 'incognito'
 
 sendMessage = (data) ->
   chrome.runtime.sendMessage data, (response) ->

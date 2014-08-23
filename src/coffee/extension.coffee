@@ -1,5 +1,22 @@
 console.log ' hello extension'
 
+windows = []
+wIndex = 0
+
+chrome.windows.getAll populate: false, (winds) ->
+  windows = winds
+
+chrome.windows.onCreated.addListener (window) ->
+  windows.push window
+  console.log "onCreated", window
+  console.log windows
+
+chrome.windows.onRemoved.addListener (windowId) ->
+  for window, index in windows
+    if window.id == windowId
+      windows.splice index, 1
+  console.log "onRemoved", window
+  console.log windows
 
 chrome.runtime.onMessage.addListener ({command}, sender, sendResponse) ->
   {tab} = sender
