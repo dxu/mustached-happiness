@@ -23,6 +23,16 @@ window.onkeyup = (evt) ->
       if escape
         evt.preventDefault()
         sendMessage command: 'extract'
+    when 81
+      console.log "q"
+      if escape
+        evt.preventDefault()
+        sendMessage command: 'move down'
+    when 69
+      console.log "e"
+      if escape
+        evt.preventDefault()
+        sendMessage command: 'move up'
 
 sendMessage = (data) ->
   chrome.runtime.sendMessage data, (response) ->
