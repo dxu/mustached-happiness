@@ -3,13 +3,27 @@ console.log ' hello extension'
 windows = []
 wIndex = 0
 
+###
+# @param window the window to check
+# @return boolean if the window is a valid window for movement
+###
+checkWindow = (window) ->
+  return window.type == 'normal' and window.state == 'normal'
+
 chrome.windows.getAll populate: false, (winds) ->
-  windows = winds
+  # take only the windows that are normal
+  windows = (window for window in winds when checkWindow window)
+
+chrome.windows.getCurrent populate:false, (window) ->
+  wIndex = i for w, i in windows when window.id == w.id
+  console.log windows
+  console.log wIndex
 
 chrome.windows.onCreated.addListener (window) ->
-  windows.push window
+  if checkWindow window then windows.push window
   console.log "onCreated", window
   console.log windows
+  console.log wIndex
 
 chrome.windows.onRemoved.addListener (windowId) ->
   for window, index in windows
@@ -17,6 +31,7 @@ chrome.windows.onRemoved.addListener (windowId) ->
       windows.splice index, 1
   console.log "onRemoved", window
   console.log windows
+  console.log wIndex
 
 chrome.runtime.onMessage.addListener ({command}, sender, sendResponse) ->
   {tab} = sender
@@ -42,7 +57,7 @@ chrome.runtime.onMessage.addListener ({command}, sender, sendResponse) ->
       wIndex = if (wIndex - 1) < 0 then windows.length - 1 else wIndex - 1
       chrome.tabs.move tab.id,
         index: -1
-        window:  windows[windex].id,
+        windowId:  windows[wIndex].id,
         (tab) ->
           console.log tab
 
@@ -51,7 +66,7 @@ chrome.runtime.onMessage.addListener ({command}, sender, sendResponse) ->
       console.log wIndex
       chrome.tabs.move tab.id,
         index: -1
-        window: windows[wIndex = (wIndex + 1) % windows.length].id,
+        windowId: windows[wIndex = (wIndex + 1) % windows.length].id,
         (tab) ->
           console.log tab
 
