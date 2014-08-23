@@ -60,6 +60,10 @@ chrome.runtime.onMessage.addListener ({command}, sender, sendResponse) ->
         windowId:  windows[wIndex].id,
         (tab) ->
           console.log tab
+          chrome.tabs.update tab.id, active: true, (tab) ->
+            console.log 'fixed'
+          chrome.windows.update windows[wIndex].id, focused: true, (tab) ->
+            console.log 'fixed'
 
     when "move up"
       console.log "move up"
@@ -69,4 +73,8 @@ chrome.runtime.onMessage.addListener ({command}, sender, sendResponse) ->
         windowId: windows[wIndex = (wIndex + 1) % windows.length].id,
         (tab) ->
           console.log tab
+          chrome.tabs.update tab.id, active: true, (tab) ->
+            console.log 'fixed'
+          chrome.windows.update windows[wIndex].id, focused: true, (tab) ->
+            console.log 'fixed'
 
