@@ -14,16 +14,16 @@ window.onkeyup = (evt) ->
         evt.preventDefault()
         sendMessage command: 'move right'
     when 65
-      console.log "s"
+      console.log "a"
       if escape
         evt.preventDefault()
         sendMessage command: 'move left'
-
-
+    when 83
+      console.log "s"
+      if escape
+        evt.preventDefault()
+        sendMessage command: 'extract'
 
 sendMessage = (data) ->
   chrome.runtime.sendMessage data, (response) ->
     console.log "Sent Response", response
-
-
-

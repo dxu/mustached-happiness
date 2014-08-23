@@ -14,3 +14,8 @@ chrome.runtime.onMessage.addListener ({command}, sender, sendResponse) ->
       console.log "move right"
       chrome.tabs.move tab.id, index: tab.index + 1, (tab) ->
         console.log tab
+
+    when "extract"
+      console.log "extract"
+      chrome.windows.create {tabId: tab.id}, (window) ->
+        console.log window
