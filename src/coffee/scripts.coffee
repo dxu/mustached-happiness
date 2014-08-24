@@ -10,27 +10,27 @@ window.onkeyup = (evt) ->
       setTimeout (-> escape = false), 500
     when 68
       console.log "d"
-      if escape
+      if evt.ctrlKey
         evt.preventDefault()
         sendMessage command: 'move right'
     when 65
       console.log "a"
-      if escape
+      if evt.ctrlKey
         evt.preventDefault()
         sendMessage command: 'move left'
     when 83
       console.log "s"
-      if escape
+      if evt.ctrlKey
         evt.preventDefault()
         sendMessage command: 'extract'
     when 81
       console.log "q"
-      if escape
+      if evt.ctrlKey
         evt.preventDefault()
         sendMessage command: 'move down'
     when 69
       console.log "e"
-      if escape
+      if evt.ctrlKey
         evt.preventDefault()
         sendMessage command: 'move up'
     when 80
