@@ -3,6 +3,8 @@ console.log ' hello extension'
 windows = []
 wIndex = 0
 
+# holds positions of pinned tabs
+pinTable = {}
 
 ###
 # @param window the window to check
@@ -62,9 +64,9 @@ chrome.runtime.onMessage.addListener ({command}, sender, sendResponse) ->
         (tab) ->
           console.log tab
           chrome.tabs.update tab.id, active: true, (tab) ->
-            console.log 'fixed'
+            console.log 'move down'
           chrome.windows.update windows[wIndex].id, focused: true, (tab) ->
-            console.log 'fixed'
+            console.log 'move down'
 
     when "move up"
       console.log "move up"
@@ -75,11 +77,21 @@ chrome.runtime.onMessage.addListener ({command}, sender, sendResponse) ->
         (tab) ->
           console.log tab
           chrome.tabs.update tab.id, active: true, (tab) ->
-            console.log 'fixed'
+            console.log 'move up'
           chrome.windows.update windows[wIndex].id, focused: true, (tab) ->
-            console.log 'fixed'
+            console.log 'move up'
 
     when "pin"
       console.log "pin"
+
+      # if pinned, return to previous index
+      if !tab.pinned
+        pinTable[tab.id] = tab.index
+
       chrome.tabs.update tab.id, pinned: !tab.pinned, (tab) ->
-        console.log 'fixed'
+        console.log 'pinned'
+        console.log pinTable[tab.id]
+        if !tab.pinned
+          chrome.tabs.move tab.id, index: pinTable[tab.id] || -1, (tab) ->
+            console.log "moved after pinning"
+
