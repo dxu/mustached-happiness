@@ -39,6 +39,12 @@ window.onkeyup = (evt) ->
         console.log "po"
         evt.preventDefault()
         sendMessage command: 'pin'
+    when 73
+      console.log "i"
+      if evt.ctrlKey
+        console.log "po"
+        evt.preventDefault()
+        sendMessage command: 'incognito'
 
 sendMessage = (data) ->
   chrome.runtime.sendMessage data, (response) ->

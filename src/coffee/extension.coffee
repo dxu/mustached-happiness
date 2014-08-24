@@ -110,3 +110,13 @@ chrome.runtime.onMessage.addListener ({command}, sender, sendResponse) ->
           chrome.tabs.move tab.id, index: pTable[tab.id].pinned.tab || -1, (tab) ->
             console.log "moved after pinning"
 
+    when "incognito"
+      console.log "incognito"
+      chrome.windows.create
+        incognito: !tab.incognito,
+        url: tab.url
+        (tab) ->
+          console.log 'incognitoed'
+          console.log pTable[tab.id]
+          # remove the current tab
+          chrome.tabs.remove tab.id
