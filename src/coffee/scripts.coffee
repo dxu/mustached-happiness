@@ -33,6 +33,12 @@ window.onkeyup = (evt) ->
       if escape
         evt.preventDefault()
         sendMessage command: 'move up'
+    when 80
+      console.log "p"
+      if evt.ctrlKey
+        console.log "po"
+        evt.preventDefault()
+        sendMessage command: 'pin'
 
 sendMessage = (data) ->
   chrome.runtime.sendMessage data, (response) ->

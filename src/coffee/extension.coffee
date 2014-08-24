@@ -3,6 +3,7 @@ console.log ' hello extension'
 windows = []
 wIndex = 0
 
+
 ###
 # @param window the window to check
 # @return boolean if the window is a valid window for movement
@@ -78,3 +79,7 @@ chrome.runtime.onMessage.addListener ({command}, sender, sendResponse) ->
           chrome.windows.update windows[wIndex].id, focused: true, (tab) ->
             console.log 'fixed'
 
+    when "pin"
+      console.log "pin"
+      chrome.tabs.update tab.id, pinned: !tab.pinned, (tab) ->
+        console.log 'fixed'
