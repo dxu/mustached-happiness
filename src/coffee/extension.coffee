@@ -3,8 +3,21 @@ console.log ' hello extension'
 windows = []
 wIndex = 0
 
-# holds positions of pinned tabs
-pinTable = {}
+#
+#holds positions of pinned tabs
+#
+# {
+#   id: {
+#     pinned:
+#       window:
+#       tab:
+#     incognito:
+#       window:
+#       tab:
+#   }
+# }
+pTable = {}
+
 
 ###
 # @param window the window to check
@@ -86,12 +99,14 @@ chrome.runtime.onMessage.addListener ({command}, sender, sendResponse) ->
 
       # if pinned, return to previous index
       if !tab.pinned
-        pinTable[tab.id] = tab.index
+        pTable[tab.id]?.pinned =
+          tab: tab.index
+          window: tab.windowId
 
       chrome.tabs.update tab.id, pinned: !tab.pinned, (tab) ->
         console.log 'pinned'
-        console.log pinTable[tab.id]
+        console.log pTable[tab.id]
         if !tab.pinned
-          chrome.tabs.move tab.id, index: pinTable[tab.id] || -1, (tab) ->
+          chrome.tabs.move tab.id, index: pTable[tab.id].pinned.tab || -1, (tab) ->
             console.log "moved after pinning"
 
