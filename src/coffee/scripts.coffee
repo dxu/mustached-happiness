@@ -51,6 +51,17 @@ window.onkeyup = (evt) ->
         console.log "po"
         evt.preventDefault()
         sendMessage command: 'incognito'
+    when 48, 49, 50, 51, 52, 53, 54, 55, 56, 57
+      # subtract 49: -1 will got to the final
+      console.log "#{idx = evt.keyCode - 49}"
+      if evt.ctrlKey
+        evt.preventDefault()
+        sendMessage
+          command: "move num"
+          data:
+            tabIndex: idx
+
+
 
 sendMessage = (data) ->
   chrome.runtime.sendMessage data, (response) ->

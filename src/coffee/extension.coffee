@@ -50,7 +50,7 @@ chrome.windows.onRemoved.addListener (windowId) ->
   console.log windows
   console.log wIndex
 
-chrome.runtime.onMessage.addListener ({command}, sender, sendResponse) ->
+chrome.runtime.onMessage.addListener ({command, data}, sender, sendResponse) ->
   {tab} = sender
 
   switch command
@@ -139,4 +139,8 @@ chrome.runtime.onMessage.addListener ({command}, sender, sendResponse) ->
 
       # remove the current tab
       chrome.tabs.remove tab.id
+    when "move num"
+      chrome.tabs.move tab.id, index: data.tabIndex, (tab) ->
+        console.log tab
+      console.log data
 
