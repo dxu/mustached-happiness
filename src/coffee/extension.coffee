@@ -42,10 +42,11 @@ chrome.windows.onCreated.addListener (window) ->
   console.log wIndex
 
 chrome.windows.onRemoved.addListener (windowId) ->
+  console.log "onRemoved", window
+  console.log windows
   for window, index in windows
     if window.id == windowId
       windows.splice index, 1
-  console.log "onRemoved", window
   console.log windows
   console.log wIndex
 
@@ -99,7 +100,7 @@ chrome.runtime.onMessage.addListener ({command}, sender, sendResponse) ->
 
       # if pinned, return to previous index
       if !tab.pinned
-        pTable[tab.id]?.pinned =
+        pTable[tab.id] = pinned:
           tab: tab.index
           window: tab.windowId
 
@@ -112,11 +113,30 @@ chrome.runtime.onMessage.addListener ({command}, sender, sendResponse) ->
 
     when "incognito"
       console.log "incognito"
-      chrome.windows.create
-        incognito: !tab.incognito,
+
+      data =
+        incognito: !tab.incognito
         url: tab.url
-        (tab) ->
-          console.log 'incognitoed'
-          console.log pTable[tab.id]
-          # remove the current tab
-          chrome.tabs.remove tab.id
+
+      if tab.incognito
+        data.windowId = pTable[tab.id].incognito.window
+
+        # if new tab is not incognito, move it to the old position
+        chrome.tabs.create
+          url: tab.url
+          windowId: pTable[tab.id].incognito.window,
+          (newTab) ->
+
+      else
+        # if caller is not incognito, create a new incognito tab with the starter url
+        chrome.windows.create data,
+          (newWindow) ->
+            newTab = newWindow.tabs[0]
+            # return to previous index in previous window
+            pTable[newTab.id] = incognito:
+              tab: tab.index
+              window: tab.windowId
+
+      # remove the current tab
+      chrome.tabs.remove tab.id
+
