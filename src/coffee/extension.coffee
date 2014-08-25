@@ -8,9 +8,11 @@ wIndex = 0
 #
 # {
 #   id: {
-#     position:
+#     incognito:
 #       window:
 #       tab:
+#     position:
+#       window: tab
 #   }
 # }
 pTable = {}
@@ -21,9 +23,11 @@ pTable = {}
 # @return boolean if the window is a valid window for movement
 ###
 checkWindow = (window) ->
-  return window.type == 'normal'
+  return window.type == 'normal' and !window.incognito
 
 chrome.windows.getAll populate: false, (winds) ->
+  console.log 'hello'
+  console.log  winds
   # take only the windows that are normal
   windows = (window for window in winds when checkWindow window)
 
@@ -69,52 +73,66 @@ chrome.runtime.onMessage.addListener ({command, data}, sender, sendResponse) ->
     when "move down"
       console.log "move down"
 
-
       wIndex = if (wIndex - 1) < 0 then windows.length - 1 else wIndex - 1
+      console.log windows
+      console.log wIndex
 
-
-      pTable[tab.id] = position:
-        window: tab.windowId
-        tab: tab.index
-
-
-      chrome.tabs.move tab.id,
+      data =
         index: -1
-        windowId:  windows[wIndex].id,
-        (tab) ->
-          console.log tab
-          chrome.tabs.update tab.id, active: true, (tab) ->
-            console.log 'move down'
-          chrome.windows.update windows[wIndex].id, focused: true, (tab) ->
-            console.log 'move down'
+        windowId: windows[wIndex].id
+
+      # if this next window is equal to the window in the position
+      # then make sure it goes to the previous
+      if data.windowId == pTable[tab.id]?.position.window
+        data.index = pTable[tab.id]?.position.tab
+
+      chrome.tabs.move tab.id, data, (tab) ->
+        console.log tab
+        chrome.tabs.update tab.id, active: true, (tab) ->
+          console.log 'move down'
+        chrome.windows.update windows[wIndex].id, focused: true, (tab) ->
+          console.log 'move down'
+
+        pTable[tab.id] = position:
+          window: tab.windowId
+          tab: tab.index
 
     when "move up"
       console.log "move up"
+      console.log windows
       console.log wIndex
-      chrome.tabs.move tab.id,
+
+      data =
         index: -1
-        windowId: windows[wIndex = (wIndex + 1) % windows.length].id,
-        (tab) ->
-          console.log tab
-          chrome.tabs.update tab.id, active: true, (tab) ->
-            console.log 'move up'
-          chrome.windows.update windows[wIndex].id, focused: true, (tab) ->
-            console.log 'move up'
+        windowId: windows[wIndex = (wIndex + 1) % windows.length].id
+
+      if data.windowId == pTable[tab.id]?.position.window
+        data.index = pTable[tab.id]?.position.tab
+
+      chrome.tabs.move tab.id, data, (tab) ->
+        console.log tab
+        chrome.tabs.update tab.id, active: true, (tab) ->
+          console.log 'move up'
+        chrome.windows.update windows[wIndex].id, focused: true, (tab) ->
+          console.log 'move up'
+
+        pTable[tab.id] = position:
+          window: tab.windowId
+          tab: tab.index
 
     when "pin"
       console.log "pin"
 
       # if pinned, return to previous index
       if !tab.pinned
-        pTable[tab.id] = position:
-          tab: tab.index
-          window: tab.windowId
+        pTable[tab.id] = position: {}
+        pTable[tab.id].position[tab.windowId] = tab.index
 
-      chrome.tabs.update tab.id, pinned: !tab.pinned, (tab) ->
+      chrome.tabs.update tab.id, pinned: !tab.pinned, (newTab) ->
         console.log 'pinned'
-        console.log pTable[tab.id]
-        if !tab.pinned
-          chrome.tabs.move tab.id, index: pTable[tab.id].position.tab || -1, (tab) ->
+        console.log pTable[newTab.id]
+        if !newTab.pinned
+          chrome.tabs.move newTab.id, index: pTable[newTab.id].position[newTab.windowId] || -1, (tab) ->
             console.log "moved after pinning"
 
     when "incognito"
