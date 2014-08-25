@@ -71,7 +71,16 @@ chrome.runtime.onMessage.addListener ({command, data}, sender, sendResponse) ->
 
     when "move down"
       console.log "move down"
+
+
       wIndex = if (wIndex - 1) < 0 then windows.length - 1 else wIndex - 1
+
+
+      pTable[tab.id] = pinned:
+        window: tab.windowId
+        tab: tab.index
+
+
       chrome.tabs.move tab.id,
         index: -1
         windowId:  windows[wIndex].id,
@@ -115,25 +124,23 @@ chrome.runtime.onMessage.addListener ({command, data}, sender, sendResponse) ->
       console.log "incognito"
 
       data =
-        incognito: !tab.incognito
         url: tab.url
 
       if tab.incognito
-        data.windowId = pTable[tab.id].incognito.window
-
+        data.windowId = pTable[tab.id].pinned.window
+        data.index = pTable[tab.id].pinned.tab
         # if new tab is not incognito, move it to the old position
-        chrome.tabs.create
-          url: tab.url
-          windowId: pTable[tab.id].incognito.window,
+        chrome.tabs.create data,
           (newTab) ->
 
       else
+        data.incognito = !tab.incognito
         # if caller is not incognito, create a new incognito tab with the starter url
         chrome.windows.create data,
           (newWindow) ->
             newTab = newWindow.tabs[0]
             # return to previous index in previous window
-            pTable[newTab.id] = incognito:
+            pTable[newTab.id] = pinned:
               tab: tab.index
               window: tab.windowId
 
