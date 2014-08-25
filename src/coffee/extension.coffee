@@ -8,10 +8,7 @@ wIndex = 0
 #
 # {
 #   id: {
-#     pinned:
-#       window:
-#       tab:
-#     incognito:
+#     position:
 #       window:
 #       tab:
 #   }
@@ -76,7 +73,7 @@ chrome.runtime.onMessage.addListener ({command, data}, sender, sendResponse) ->
       wIndex = if (wIndex - 1) < 0 then windows.length - 1 else wIndex - 1
 
 
-      pTable[tab.id] = pinned:
+      pTable[tab.id] = position:
         window: tab.windowId
         tab: tab.index
 
@@ -109,7 +106,7 @@ chrome.runtime.onMessage.addListener ({command, data}, sender, sendResponse) ->
 
       # if pinned, return to previous index
       if !tab.pinned
-        pTable[tab.id] = pinned:
+        pTable[tab.id] = position:
           tab: tab.index
           window: tab.windowId
 
@@ -117,7 +114,7 @@ chrome.runtime.onMessage.addListener ({command, data}, sender, sendResponse) ->
         console.log 'pinned'
         console.log pTable[tab.id]
         if !tab.pinned
-          chrome.tabs.move tab.id, index: pTable[tab.id].pinned.tab || -1, (tab) ->
+          chrome.tabs.move tab.id, index: pTable[tab.id].position.tab || -1, (tab) ->
             console.log "moved after pinning"
 
     when "incognito"
@@ -127,8 +124,8 @@ chrome.runtime.onMessage.addListener ({command, data}, sender, sendResponse) ->
         url: tab.url
 
       if tab.incognito
-        data.windowId = pTable[tab.id].pinned.window
-        data.index = pTable[tab.id].pinned.tab
+        data.windowId = pTable[tab.id].position.window
+        data.index = pTable[tab.id].position.tab
         # if new tab is not incognito, move it to the old position
         chrome.tabs.create data,
           (newTab) ->
@@ -140,7 +137,7 @@ chrome.runtime.onMessage.addListener ({command, data}, sender, sendResponse) ->
           (newWindow) ->
             newTab = newWindow.tabs[0]
             # return to previous index in previous window
-            pTable[newTab.id] = pinned:
+            pTable[newTab.id] = position:
               tab: tab.index
               window: tab.windowId
 
