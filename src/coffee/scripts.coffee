@@ -3,6 +3,12 @@ console.log " hello scripts "
 escape = false
 
 window.onkeyup = (evt) ->
+
+  # don't do it if focus is on an input box
+  console.log document.activeElement.tagName
+
+  if document.activeElement.tagName.toLowerCase() == "input" then return
+
   switch evt.keyCode
     when 220
       console.log "escape"
