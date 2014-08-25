@@ -124,8 +124,8 @@ chrome.runtime.onMessage.addListener ({command, data}, sender, sendResponse) ->
         url: tab.url
 
       if tab.incognito
-        data.windowId = pTable[tab.id].position.window
-        data.index = pTable[tab.id].position.tab
+        data.windowId = pTable[tab.id].incognito.window
+        data.index = pTable[tab.id].incognito.tab
         # if new tab is not incognito, move it to the old position
         chrome.tabs.create data,
           (newTab) ->
@@ -137,7 +137,7 @@ chrome.runtime.onMessage.addListener ({command, data}, sender, sendResponse) ->
           (newWindow) ->
             newTab = newWindow.tabs[0]
             # return to previous index in previous window
-            pTable[newTab.id] = position:
+            pTable[newTab.id] = incognito:
               tab: tab.index
               window: tab.windowId
 
