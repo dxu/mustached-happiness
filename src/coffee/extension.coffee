@@ -21,7 +21,7 @@ pTable = {}
 # @return boolean if the window is a valid window for movement
 ###
 checkWindow = (window) ->
-  return window.type == 'normal' and window.state == 'normal'
+  return window.type == 'normal'
 
 chrome.windows.getAll populate: false, (winds) ->
   # take only the windows that are normal
