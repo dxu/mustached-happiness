@@ -10,47 +10,56 @@ window.onkeyup = (evt) ->
   if document.activeElement.tagName.toLowerCase() == "input" then return
 
   switch evt.keyCode
+    # escape
     when 220
       console.log "escape"
       escape = true
       setTimeout (-> escape = false), 500
+    # d
     when 68
       console.log "d"
       if evt.ctrlKey
         evt.preventDefault()
         sendMessage command: 'move right'
+    # a
     when 65
       console.log "a"
       if evt.ctrlKey
         evt.preventDefault()
         sendMessage command: 'move left'
+    # s
     when 83
       console.log "s"
       if evt.ctrlKey
         evt.preventDefault()
         sendMessage command: 'extract'
+    # q
     when 81
       console.log "q"
       if evt.ctrlKey
         evt.preventDefault()
         sendMessage command: 'move down'
+    # e
     when 69
       console.log "e"
       if evt.ctrlKey
         evt.preventDefault()
         sendMessage command: 'move up'
+    # p
     when 80
       console.log "p"
       if evt.ctrlKey
         console.log "po"
         evt.preventDefault()
         sendMessage command: 'pin'
+    # i
     when 73
       console.log "i"
       if evt.ctrlKey
         console.log "po"
         evt.preventDefault()
         sendMessage command: 'incognito'
+    # numbers 0 - 9
     when 48, 49, 50, 51, 52, 53, 54, 55, 56, 57
       # subtract 49: -1 will got to the final
       console.log "#{idx = evt.keyCode - 49}"
