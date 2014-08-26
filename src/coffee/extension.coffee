@@ -1,5 +1,3 @@
-console.log ' hello extension'
-
 windows = []
 wIndex = 0
 
@@ -26,57 +24,35 @@ checkWindow = (window) ->
   return window.type == 'normal' and !window.incognito
 
 chrome.windows.getAll populate: false, (winds) ->
-  console.log 'hello'
-  console.log  winds
   # take only the windows that are normal
   windows = (window for window in winds when checkWindow window)
 
 chrome.windows.getCurrent populate:false, (window) ->
   wIndex = i for w, i in windows when window.id == w.id
-  console.log windows
-  console.log wIndex
 
 chrome.windows.onCreated.addListener (window) ->
   if checkWindow window then windows.push window
-  console.log "onCreated", window
-  console.log windows
-  console.log wIndex
 
 chrome.windows.onRemoved.addListener (windowId) ->
-  console.log "onRemoved", window
-  console.log windows
   for window, index in windows
     if window.id == windowId
       windows.splice index, 1
-  console.log windows
-  console.log wIndex
 
 chrome.runtime.onMessage.addListener ({command, data}, sender, sendResponse) ->
   {tab} = sender
 
   switch command
     when "move left"
-      console.log "move left"
-      chrome.tabs.move tab.id, index: tab.index - 1, (tab) ->
-        console.log tab
+      chrome.tabs.move tab.id, index: tab.index - 1, ->
 
     when "move right"
-      console.log "move right"
-      chrome.tabs.move tab.id, index: tab.index + 1, (tab) ->
-        console.log tab
+      chrome.tabs.move tab.id, index: tab.index + 1, ->
 
     when "extract"
-      console.log "extract"
-      chrome.windows.create {tabId: tab.id}, (window) ->
-        console.log window
+      chrome.windows.create {tabId: tab.id}, ->
 
     when "move down"
-      console.log "move down"
-
       wIndex = if (wIndex - 1) < 0 then windows.length - 1 else wIndex - 1
-      console.log windows
-      console.log wIndex
-
       data =
         index: -1
         windowId: windows[wIndex].id
@@ -87,30 +63,19 @@ chrome.runtime.onMessage.addListener ({command, data}, sender, sendResponse) ->
       # if there is old position data in the ptable, then load the index
       data.index = pTable[tab.id]?.position[data.windowId] || data.index
 
-      console.log "this is the data", data
-      console.log "this is the tab and current window: ", tab.id, tab.windowId
-
       if pTable[tab.id]
         pTable[tab.id].position =  pTable[tab.id].position || {}
       else
         pTable[tab.id] = position: {}
       pTable[tab.id].position[tab.windowId] = tab.index
-      console.log "ptable", pTable
 
       chrome.tabs.move tab.id, data, (newTab) ->
-        console.log tab
-
         chrome.tabs.update newTab.id, active: true
         chrome.windows.update windows[wIndex].id, focused: true
 
-        console.log "this is happening"
-        console.log tab.index
 
 
     when "move up"
-      console.log "move up"
-      console.log windows
-      console.log wIndex
 
       data =
         index: -1
@@ -123,19 +88,14 @@ chrome.runtime.onMessage.addListener ({command, data}, sender, sendResponse) ->
       else
         pTable[tab.id] = position: {}
       pTable[tab.id].position[tab.windowId] = tab.index
-      console.log "ptable", pTable
 
       chrome.tabs.move tab.id, data, (newTab) ->
-        console.log tab
-        chrome.tabs.update newTab.id, active: true, (tab) ->
-          console.log 'move up'
-        chrome.windows.update windows[wIndex].id, focused: true, (tab) ->
-          console.log 'move up'
+        chrome.tabs.update newTab.id, active: true, ->
+        chrome.windows.update windows[wIndex].id, focused: true, ->
 
 
 
     when "pin"
-      console.log "pin"
 
       # if pinned, return to previous index
       if !tab.pinned
@@ -146,14 +106,10 @@ chrome.runtime.onMessage.addListener ({command, data}, sender, sendResponse) ->
         pTable[tab.id].position[tab.windowId] = tab.index
 
       chrome.tabs.update tab.id, pinned: !tab.pinned, (newTab) ->
-        console.log 'pinned'
-        console.log pTable[newTab.id]
         if !newTab.pinned
-          chrome.tabs.move newTab.id, index: pTable[newTab.id].position[newTab.windowId] || -1, (tab) ->
-            console.log "moved after pinning"
+          chrome.tabs.move newTab.id, index: pTable[newTab.id].position[newTab.windowId] || -1, ->
 
     when "incognito"
-      console.log "incognito"
 
       data =
         url: tab.url
@@ -162,8 +118,7 @@ chrome.runtime.onMessage.addListener ({command, data}, sender, sendResponse) ->
         data.windowId = pTable[tab.id].incognito.window
         data.index = pTable[tab.id].incognito.tab
         # if new tab is not incognito, move it to the old position
-        chrome.tabs.create data,
-          (newTab) ->
+        chrome.tabs.create data, ->
 
       else
         data.incognito = !tab.incognito
@@ -179,7 +134,5 @@ chrome.runtime.onMessage.addListener ({command, data}, sender, sendResponse) ->
       # remove the current tab
       chrome.tabs.remove tab.id
     when "move num"
-      chrome.tabs.move tab.id, index: data.tabIndex, (tab) ->
-        console.log tab
-      console.log data
+      chrome.tabs.move tab.id, index: data.tabIndex, ->
 
