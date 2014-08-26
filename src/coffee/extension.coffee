@@ -83,19 +83,29 @@ chrome.runtime.onMessage.addListener ({command, data}, sender, sendResponse) ->
 
       # if this next window is equal to the window in the position
       # then make sure it goes to the previous
-      if data.windowId == pTable[tab.id]?.position.window
-        data.index = pTable[tab.id]?.position.tab
+      #
+      # if there is old position data in the ptable, then load the index
+      data.index = pTable[tab.id]?.position[data.windowId] || data.index
 
-      chrome.tabs.move tab.id, data, (tab) ->
+      console.log "this is the data", data
+      console.log "this is the tab and current window: ", tab.id, tab.windowId
+
+      if pTable[tab.id]
+        pTable[tab.id].position =  pTable[tab.id].position || {}
+      else
+        pTable[tab.id] = position: {}
+      pTable[tab.id].position[tab.windowId] = tab.index
+      console.log "ptable", pTable
+
+      chrome.tabs.move tab.id, data, (newTab) ->
         console.log tab
-        chrome.tabs.update tab.id, active: true, (tab) ->
-          console.log 'move down'
-        chrome.windows.update windows[wIndex].id, focused: true, (tab) ->
-          console.log 'move down'
 
-        pTable[tab.id] = position:
-          window: tab.windowId
-          tab: tab.index
+        chrome.tabs.update newTab.id, active: true
+        chrome.windows.update windows[wIndex].id, focused: true
+
+        console.log "this is happening"
+        console.log tab.index
+
 
     when "move up"
       console.log "move up"
