@@ -135,7 +135,10 @@ chrome.runtime.onMessage.addListener ({command, data}, sender, sendResponse) ->
 
       # if pinned, return to previous index
       if !tab.pinned
-        pTable[tab.id] = position: {}
+        if pTable[tab.id]
+          pTable[tab.id].position ?= {}
+        else
+          pTable[tab.id] = position: {}
         pTable[tab.id].position[tab.windowId] = tab.index
 
       chrome.tabs.update tab.id, pinned: !tab.pinned, (newTab) ->
