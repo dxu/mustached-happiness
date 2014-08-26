@@ -116,19 +116,23 @@ chrome.runtime.onMessage.addListener ({command, data}, sender, sendResponse) ->
         index: -1
         windowId: windows[wIndex = (wIndex + 1) % windows.length].id
 
-      if data.windowId == pTable[tab.id]?.position.window
-        data.index = pTable[tab.id]?.position.tab
+      data.index = pTable[tab.id]?.position[data.windowId] || data.index
 
-      chrome.tabs.move tab.id, data, (tab) ->
+      if pTable[tab.id]
+        pTable[tab.id].position =  pTable[tab.id].position || {}
+      else
+        pTable[tab.id] = position: {}
+      pTable[tab.id].position[tab.windowId] = tab.index
+      console.log "ptable", pTable
+
+      chrome.tabs.move tab.id, data, (newTab) ->
         console.log tab
-        chrome.tabs.update tab.id, active: true, (tab) ->
+        chrome.tabs.update newTab.id, active: true, (tab) ->
           console.log 'move up'
         chrome.windows.update windows[wIndex].id, focused: true, (tab) ->
           console.log 'move up'
 
-        pTable[tab.id] = position:
-          window: tab.windowId
-          tab: tab.index
+
 
     when "pin"
       console.log "pin"
