@@ -134,5 +134,12 @@ chrome.runtime.onMessage.addListener ({command, data}, sender, sendResponse) ->
       # remove the current tab
       chrome.tabs.remove tab.id
     when "move num"
-      chrome.tabs.move tab.id, index: data.tabIndex, ->
+      # take into account the number of pinned tabs
+
+      chrome.tabs.getAllInWindow tab.windowId, (tabs) ->
+        # take only the windows that are normal
+        numPinned = (t for t in tabs when t.pinned).length
+        console.log numPinned
+        console.log tabs
+        chrome.tabs.move tab.id, index: data.tabIndex + numPinned, ->
 
