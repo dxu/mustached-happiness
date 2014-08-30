@@ -55,7 +55,7 @@ window.onkeyup = (evt) ->
         sendMessage
           command: "move num"
           data:
-            tabIndex: idx
+            tabIndex: evt.keyCode - 49
 
 
 
