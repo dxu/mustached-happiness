@@ -3,6 +3,7 @@
 
   "name": "mustached-happiness",
   "description": "tab management made better",
+  "options_page": "options.html",
   "minimum_chrome_version": "23",
   "version": "1.0",
   "content_scripts": [
