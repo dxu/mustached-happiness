@@ -15,6 +15,10 @@ html, body, p, h1, h2, h3, h4, h5, h6 {
   padding: 0;
 }
 
+a {
+  text-decoration: none;
+}
+
 input {
   margin: 0 5px;
   font-family: 'Source Sans Pro', sans-serif;
@@ -34,9 +38,8 @@ label {
 }
 
 #content {
-
   width: 250px;
-  height: 300px;
+  height: 400px;
   position: absolute;
   top: 0;
   left: 0;
@@ -76,3 +79,57 @@ label {
   display: none;
 }
 
+#save {
+  text-decoration: none;
+  display: inline-block;
+  margin: 10px;
+  font-size: 25px;
+  &:visited {
+    color: #5F5F5F;
+  }
+ &:hover {
+   color: #000;
+  }
+}
+
+@font-face {
+  font-family: 'fontello';
+  src: url('../fonts/fontello.ttf?13234979') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+ [class^="icon-"]:before, [class*=" icon-"]:before {
+  font-family: "fontello";
+  font-style: normal;
+  font-weight: normal;
+  speak: none;
+
+  display: inline-block;
+  text-decoration: inherit;
+  width: 1em;
+  margin-right: .2em;
+  text-align: center;
+  /* opacity: .8; */
+
+  /* For safety - reset parent styles, that can break glyph codes*/
+  font-variant: normal;
+  text-transform: none;
+
+  /* fix buttons height, for twitter bootstrap */
+  line-height: 1em;
+
+  /* Animation center compensation - margins should be symmetric */
+  /* remove if not needed */
+  margin-left: .2em;
+
+  /* you can be more comfortable with increased icons size */
+  /* font-size: 120%; */
+
+  /* Uncomment for 3D effect */
+  /* text-shadow: 1px 1px 1px rgba(127, 127, 127, 0.3); */
+}
+
+.icon-floppy:before { content: '\e800'; }
+.icon-upload:before { content: '\e801'; }
+.icon-ccw:before { content: '\e802'; }
