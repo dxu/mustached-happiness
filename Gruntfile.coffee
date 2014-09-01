@@ -1,8 +1,14 @@
 module.exports = (grunt) ->
   grunt.initConfig
+    copy:
+      src:
+        expand: true
+        cwd: 'src'
+        src: 'assets/**'
+        dest: 'src/dist'
     concurrent:
       src:
-        tasks: ['newer:coffee:src', 'newer:less:src']
+        tasks: ['newer:coffee:src', 'newer:less:src', 'newer:copy:src']
       dev:
         tasks: ['watch:src']
         options:
@@ -36,8 +42,9 @@ module.exports = (grunt) ->
   grunt.loadNpmTasks 'grunt-contrib-less'
   grunt.loadNpmTasks 'grunt-newer'
   grunt.loadNpmTasks 'grunt-contrib-clean'
+  grunt.loadNpmTasks 'grunt-contrib-copy'
 
 
-  grunt.registerTask 'build', ['coffee:src', 'less:src']
+  grunt.registerTask 'build', ['coffee:src', 'less:src', 'copy:src']
   grunt.registerTask 'dev', 'concurrent:dev'
 
