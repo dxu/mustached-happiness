@@ -32,7 +32,10 @@ readied = ->
     node_arr = [node, node.nextElementSibling?.nextElementSibling,
       node.nextElementSibling?.nextElementSibling]
     for el, index in value
+
       node_arr[index].value = bindings[el] or (String.fromCharCode el)
+      # fill in data attributes
+      node_arr[index].dataset.key = el
       node_arr[index].classList.remove('hidden')
       node_arr[index]?.previousElementSibling?.classList.remove('hidden')
       resizeInput node_arr[index]
@@ -53,18 +56,20 @@ readied = ->
         unless keyHeldDown
           keyHeldDown = evt.keyCode
           input.value = bindings[evt.keyCode] or (String.fromCharCode evt.keyCode)
+          input.dataset.key = evt.keyCode
           resizeInput input
           if input.nextElementSibling
             # on first keypress, clear the second key element
             input.nextElementSibling.nextElementSibling.value = ''
         else
           # second keypress
-          if input.nextElementSibling
+          if second_input = input.nextElementSibling.nextElementSibling
             # not for the leader key
-            input.nextElementSibling.classList.remove 'hidden'
-            input.nextElementSibling.nextElementSibling.classList.remove 'hidden'
-            input.nextElementSibling.nextElementSibling.value =
+            second_input.previousElementSibling.classList.remove 'hidden'
+            second_input.classList.remove 'hidden'
+            second_input.value =
               bindings[evt.keyCode] or (String.fromCharCode evt.keyCode)
+            second_input.dataset.key = evt.keyCode
             input.blur()
             keyHeldDown = 0
 
