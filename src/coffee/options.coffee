@@ -1,4 +1,17 @@
 keyHeldDown = 0
+commands =
+  "leader": ['\\']
+  "move-left": ['CTRL', 'A']
+  "move-right": ['CTRL', 'D']
+  "move-down": ['CTRL', 'S']
+  "move-up": ['CTRL', 'W']
+  "extract": ['CTRL', 'E']
+  "pin": ['CTRL', 'P']
+  "incognito": ['CTRL', 'I']
+  "move-num": ['CTRL']
+  "options": ['SHIFT', '/']
+
+
 
 document.onreadystatechange =  () ->
   switch (state = document.readyState)
@@ -8,7 +21,14 @@ document.onreadystatechange =  () ->
       readied()
 
 init = ->
+  chrome.storage.sync.get null, (items) ->
+    commands = if items.length then items else commands
+
 readied = ->
+  for value, key in commands
+    node = document.getElementById key
+    for el, index in value
+
   inputs = document.getElementsByTagName('input')
   for input in inputs
     do (input) ->
@@ -46,6 +66,9 @@ readied = ->
         if input.nextElementSibling
           input.nextElementSibling.classList.add 'hidden'
           input.nextElementSibling.nextElementSibling.classList.add 'hidden'
+
+registerInput = () ->
+  console.log "registering input"
 
 resizeInput = (input) ->
   input.size = input.value.length
