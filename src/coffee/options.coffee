@@ -71,7 +71,7 @@ registerInput = () ->
   console.log "registering input"
 
 resizeInput = (input) ->
-  input.size = input.value.length
+  input?.size = input.value.length
 
 bindings =
   8  : "BACKSPACE"
