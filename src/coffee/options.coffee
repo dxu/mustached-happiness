@@ -75,8 +75,24 @@ readied = ->
           input.nextElementSibling.classList.add 'hidden'
           input.nextElementSibling.nextElementSibling.classList.add 'hidden'
 
-registerInput = () ->
+
+          registerInput(input)
+
+
+registerInput = (input) ->
   console.log "registering input"
+  console.log [input, (second = input.nextElementSibling?.nextElementSibling),
+      second?.nextElementSibling.nextElementSibling]
+  console.log input.id
+
+  chrome.storage.sync.set
+    id: input.id
+    input: [input, (second = input.nextElementSibling.nextElementSibling),
+      second.nextElementSibling.nextElementSibling]
+  , (items) ->
+    commands = if items.length then items else commands
+
+
 
 resizeInput = (input) ->
   input?.size = input.value.length
