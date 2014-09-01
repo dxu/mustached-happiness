@@ -12,21 +12,16 @@ window.onkeyup = (evt) ->
     when 220
       escape = true
       setTimeout (-> escape = false), 500
-    # d
-    when 68
-      if evt.ctrlKey
-        evt.preventDefault()
-        sendMessage command: 'move right'
     # a
     when 65
       if evt.ctrlKey
         evt.preventDefault()
         sendMessage command: 'move left'
-    # s
-    when 83
+    # d
+    when 68
       if evt.ctrlKey
         evt.preventDefault()
-        sendMessage command: 'extract'
+        sendMessage command: 'move right'
     # q
     when 81
       if evt.ctrlKey
@@ -37,6 +32,11 @@ window.onkeyup = (evt) ->
       if evt.ctrlKey
         evt.preventDefault()
         sendMessage command: 'move up'
+    # s
+    when 83
+      if evt.ctrlKey
+        evt.preventDefault()
+        sendMessage command: 'extract'
     # p
     when 80
       if evt.ctrlKey
