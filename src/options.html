@@ -2,16 +2,41 @@
 <html>
   <head>
     <link rel="stylesheet" type="text/css" href="dist/styles/options.css">
+    <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:200,300,400' rel='stylesheet' type='text/css'>
   </head>
   <body>
     <script src="dist/scripts/options.js" type="text/javascript"></script>
 
+    <div id="content">
+      <h1> KEYBINDINGS </h1>
 
-    <div class="command">
-      <label></label>
-      <input/> +
-      <input/>
+      <div id="leader-div"> <label for="leader">LEADER</label><input id="leader"/> </div>
+
+      <div id="keybinds">
+        <div id="command-labels">
+          <label for="move-left">MOVE LEFT</label>
+          <label for="move-right">MOVE RIGHT</label>
+          <label for="move-down">MOVE DOWN</label>
+          <label for="move-up">MOVE UP</label>
+          <label for="extract">EXTRACT</label>
+          <label for="pin">PIN</label>
+          <label for="incognito">INCOGNITO</label>
+          <label for="move-num">MOVE NUM</label>
+          <label for="options">OPTIONS</label>
+        </div>
+
+        <div id="command-keys">
+          <div><input id="move-left"/>   + <input/></div>
+          <div><input id="move-right" /> + <input/></div>
+          <div><input id="move-down" />  + <input/></div>
+          <div><input id="move-up" />    + <input/></div>
+          <div><input id="extract" />    + <input/></div>
+          <div><input id="pin" />        + <input/></div>
+          <div><input id="incognito" />  + <input/></div>
+          <div><input id="move-num" />   + <input/></div>
+          <div><input id="options" />    + <input/></div>
+        </div>
+      </div>
     </div>
-
-  </body>
+ </body>
 </html>
