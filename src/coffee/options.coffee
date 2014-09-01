@@ -25,9 +25,17 @@ init = ->
     commands = if items.length then items else commands
 
 readied = ->
-  for value, key in commands
+  console.log 'hti', commands
+  for key, value of commands
+    console.log 'hit'
     node = document.getElementById key
+    node_arr = [node, node.nextElementSibling?.nextElementSibling,
+      node.nextElementSibling?.nextElementSibling]
     for el, index in value
+      node_arr[index].value = el
+      node_arr[index].classList.remove('hidden')
+      node_arr[index]?.previousElementSibling?.classList.remove('hidden')
+      resizeInput node_arr[index]
 
   inputs = document.getElementsByTagName('input')
   for input in inputs
