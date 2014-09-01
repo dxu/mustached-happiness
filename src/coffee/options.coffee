@@ -1,15 +1,15 @@
 keyHeldDown = 0
 commands =
-  "leader": ['\\']
-  "move-left": ['CTRL', 'A']
-  "move-right": ['CTRL', 'D']
-  "move-down": ['CTRL', 'S']
-  "move-up": ['CTRL', 'W']
-  "extract": ['CTRL', 'E']
-  "pin": ['CTRL', 'P']
-  "incognito": ['CTRL', 'I']
-  "move-num": ['CTRL']
-  "options": ['SHIFT', '/']
+  "leader":     [220]           # \
+  "move-left":  [17, 65]   # CTRL + a
+  "move-right": [17, 68]   # CTRL + d
+  "move-down":  [17, 69]   # CTRL + s
+  "move-up":    [17, 81]   # CTRL + w
+  "extract":    [17, 83]   # CTRL + e
+  "pin":        [17, 80]   # CTRL + p
+  "incognito":  [17, 73]   # CTRL + i
+  "move-num":   [17]        # CTRL
+  "options":    [16, 191]  # SHIFT + /
 
 
 
@@ -32,7 +32,7 @@ readied = ->
     node_arr = [node, node.nextElementSibling?.nextElementSibling,
       node.nextElementSibling?.nextElementSibling]
     for el, index in value
-      node_arr[index].value = el
+      node_arr[index].value = bindings[el] or (String.fromCharCode el)
       node_arr[index].classList.remove('hidden')
       node_arr[index]?.previousElementSibling?.classList.remove('hidden')
       resizeInput node_arr[index]
