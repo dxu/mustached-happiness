@@ -1,3 +1,11 @@
+# connect to the port
+port = chrome.runtime.connect name: "commands"
+port.onMessage.addListener (msg) ->
+  console.log 'onmessage', msg
+  # if msg.question == "Who's there?"
+  #   port.postMessage answer: "Madame"
+  # else if msg.question == "Madame who?"
+  #   port.postMessage({answer: "Madame... Bovary"})
 
 escape = false
 
