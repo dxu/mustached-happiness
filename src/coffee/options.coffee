@@ -22,7 +22,8 @@ document.onreadystatechange =  () ->
 
 init = ->
   chrome.storage.sync.get null, (items) ->
-    commands = if items.length then items else commands
+    console.log 'got items', items, items.length
+    commands = if items.leader then items else commands
 
 readied = ->
   console.log 'hti', commands
@@ -37,7 +38,7 @@ readied = ->
     node = document.getElementById key
     node_arr = [node, node.nextElementSibling?.nextElementSibling,
       node.nextElementSibling?.nextElementSibling]
-    for el, index in value
+    for el, index in value when el
 
       node_arr[index].value = bindings[el] or (String.fromCharCode el)
       # fill in data attributes
