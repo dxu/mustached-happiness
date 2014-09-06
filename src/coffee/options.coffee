@@ -20,24 +20,16 @@ document.onreadystatechange =  () ->
       init()
 
 init = ->
-  console.log 'ini'
   chrome.storage.sync.get null, (items) ->
-    console.log 'got items', items, items.length
-    console.log items.leader
     commands = if items.leader then items else commands
-    console.log 'hi', commands
     readied()
 
 readied = ->
-  console.log 'hti', commands
   document.getElementById('save').addEventListener 'click', (evt) ->
-    console.log 'saved'
     saveInputs()
     syncInputs()
   document.getElementById('undo').addEventListener 'click', (evt) ->
-    console.log 'undo'
   for key, value of commands
-    console.log 'hit'
     node = document.getElementById key
     node_arr = [node, node.nextElementSibling?.nextElementSibling,
       node.nextElementSibling?.nextElementSibling]
@@ -93,17 +85,11 @@ readied = ->
 
 
 saveInputs = ->
-  console.log "registering input", commands
-  # console.log [input, (second = input.nextElementSibling?.nextElementSibling),
-  #     second?.nextElementSibling.nextElementSibling]
-  # console.log input.id
-
   # every input with an id is a command
   inputs = (inp for inp in document.getElementsByTagName('input') when inp.id)
 
   # for every input that is hidden, clear the dataset.key
   for empty_input in document.getElementsByTagName('input')
-    console.log empty_input.classList.contains('hidden')
     if empty_input.classList.contains('hidden')
       delete empty_input.dataset.key
       empty_input.value = ''
