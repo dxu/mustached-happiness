@@ -26,6 +26,12 @@ init = ->
 
 readied = ->
   console.log 'hti', commands
+  document.getElementById('save').addEventListener 'click', (evt) ->
+    console.log 'saved'
+    saveInputs()
+    syncInputs()
+  document.getElementById('undo').addEventListener 'click', (evt) ->
+    console.log 'undo'
   for key, value of commands
     console.log 'hit'
     node = document.getElementById key
