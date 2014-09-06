@@ -82,30 +82,6 @@ readied = ->
           input.nextElementSibling.classList.add 'hidden'
           input.nextElementSibling.nextElementSibling.classList.add 'hidden'
 
-
-
-connections = []
-
-
-# setup one way port connection listener from tab to this
-setupConnection = ->
-  chrome.runtime.onConnect.addListener (port) ->
-    console.log 'connected', port
-
-    port.onDisconnect.addListener (port) ->
-      console.log 'disconnected', port
-    # connections.push connections.sender.tab.id
-  # port = chrome.runtime.connect name: 'temps'
-  # port.postMessage('hi')
-
-  # chrome.runtime.onDisconnect.addListener (port) ->
-  #   console.log 'discnonected', port
-
-setupConnection()
-
-
-
-
 saveInputs = ->
   # every input with an id is a command
   inputs = (inp for inp in document.getElementsByTagName('input') when inp.id)

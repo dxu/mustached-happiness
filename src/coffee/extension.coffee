@@ -16,6 +16,8 @@ wIndex = 0
 pTable = {}
 
 
+
+
 ###
 # @param window the window to check
 # @return boolean if the window is a valid window for movement
@@ -147,4 +149,29 @@ chrome.runtime.onMessage.addListener ({command, data}, sender, sendResponse) ->
               chrome.tabs.move tab.id, index: data.tabIndex, ->
           else
             chrome.tabs.move tab.id, index: data.tabIndex, ->
+
+
+
+
+
+connections = []
+
+
+# setup one way port connection listener from tab to this
+setupConnection = ->
+  chrome.runtime.onConnect.addListener (port) ->
+    console.log 'connected', port
+
+    port.onDisconnect.addListener (port) ->
+      console.log 'disconnected', port
+    # connections.push connections.sender.tab.id
+  # port = chrome.runtime.connect name: 'temps'
+  # port.postMessage('hi')
+
+  # chrome.runtime.onDisconnect.addListener (port) ->
+  #   console.log 'discnonected', port
+
+setupConnection()
+
+
 
