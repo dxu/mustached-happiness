@@ -90,6 +90,14 @@ window.saveInputs = ->
 
   # every input with an id is a command
   inputs = (inp for inp in document.getElementsByTagName('input') when inp.id)
+
+  # for every input that is hidden, clear the dataset.key
+  for empty_input in document.getElementsByTagName('input')
+    console.log empty_input.classList.contains('hidden')
+    if empty_input.classList.contains('hidden')
+      delete empty_input.dataset.key
+      empty_input.value = ''
+
   for cmd_input in inputs
     commands[cmd_input.id] =
       [cmd_input.dataset.key,
