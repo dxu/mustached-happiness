@@ -4,8 +4,9 @@ escape = false
 window.onkeyup = (evt) ->
 
   # don't do it if focus is on an input box
+  activeElement = document.activeElement.tagName.toLowerCase()
 
-  if document.activeElement.tagName.toLowerCase() == "input" then return
+  if activeElement == "input" or activeElement == "textarea" then return
 
   switch evt.keyCode
     # escape
