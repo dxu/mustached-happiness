@@ -89,8 +89,8 @@ readied = ->
 
 
 
-window.saveInputs = ->
-  console.log "registering input"
+saveInputs = ->
+  console.log "registering input", commands
   # console.log [input, (second = input.nextElementSibling?.nextElementSibling),
   #     second?.nextElementSibling.nextElementSibling]
   # console.log input.id
