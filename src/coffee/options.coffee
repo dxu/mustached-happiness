@@ -15,15 +15,18 @@ commands =
 
 document.onreadystatechange =  () ->
   switch (state = document.readyState)
-    when 'interactive'
-      init()
+    # when 'interactive'
     when 'complete'
-      readied()
+      init()
 
 init = ->
+  console.log 'ini'
   chrome.storage.sync.get null, (items) ->
     console.log 'got items', items, items.length
+    console.log items.leader
     commands = if items.leader then items else commands
+    console.log 'hi', commands
+    readied()
 
 readied = ->
   console.log 'hti', commands
