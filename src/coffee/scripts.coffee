@@ -9,26 +9,53 @@ commands =
   "pin":        [17, 80]   # CTRL + p
   "incognito":  [17, 73]   # CTRL + i
   "options":    [16, 191]  # SHIFT + /
+  "move-num":   [[17, 48], [17, 49], [17, 50], [17, 51], [17, 52], [17, 53], [17, 54], [17, 55], [17, 56], [17, 57]]        # CTRL
 
-commandsWithData =
-  "move-num":   [17]        # CTRL
+cData =
+  "default": -> {}
+  "move-num": (input, evt) ->
+    return tabIndex: evt.keyCode - 49
 
 
-send = (command, input, keyCode, data={}) ->
-  console.log 'in send', command, input, keyCode, heldKey
+
+
+isArray = (arr) ->
+  Object.prototype.toString.call(arr) == '[object Array]'
+
+# commandsWithData =
+
+
+# if null, then nothing to compare
+getHeldComparison = (input) ->
+  # console.log 'in send', command, input, keyCode, heldKey
   if (check = input[0]) and input.length == 2
     # if 2 keys, check first key. If it's equal to leader, check leader. Else check held key
     if heldKey != input[0]
-      # if not, then just return
-      return
+      # if not, then just return null
+      return null
     check = input[1]
+  return check
+
+
+# input is the input
+send = (command, input, evt) ->
+  console.log 'send', command, input, evt.keyCode
+  # if the type of element one is an array, that means there are multiple accepted inputs
+  if isArray input[0]
+    console.log 'hi', input[0], isArray input[0]
+    # loop through each of the inputs and set check
+    unless (input = (inp for inp in input when inp[1] == evt.keyCode)[0])
+      return
+  else
+    console.log 'hit this'
+    console.log 'hrll', getHeldComparison(input)
+    unless evt.keyCode == getHeldComparison(input)
+      return
+
   data = {}
-  console.log check
-  if check == keyCode
-    console.log 'sent', command, input, keyCode
-    sendMessage
-      command: command
-      data: data
+  sendMessage
+    command: command
+    data: (cData[command] || cData.default)(input, evt)
 
 
 # connect to the port
@@ -75,7 +102,7 @@ window.addEventListener 'keydown', (evt) ->
   # console.log 'hit first', commands
   for key, value of commands
     # console.log 'hit', value, key, evt.keyCode
-    send key, value, evt.keyCode, data
+    send key, value, evt, data
 
   # switch evt.keyCode
   #   # escape
