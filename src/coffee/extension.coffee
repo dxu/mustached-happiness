@@ -1,8 +1,40 @@
-windows = []
-wIndex = 0
+window.commands =
+  "leader":     [220]           # \
+  "move-left":  [17, 65]   # CTRL + a
+  "move-right": [17, 68]   # CTRL + d
+  "move-down":  [17, 69]   # CTRL + s
+  "move-up":    [17, 81]   # CTRL + w
+  "extract":    [17, 83]   # CTRL + e
+  "pin":        [17, 80]   # CTRL + p
+  "incognito":  [17, 73]   # CTRL + i
+  "move-num":   [17]        # CTRL
+  "options":    [16, 191]  # SHIFT + /
 
-#
-#holds positions of pinned tabs
+chrome.storage.sync.get null, (items) ->
+  window.commands = if items.leader then items else window.commands
+
+
+window.connections = {}
+
+
+# setup one way port connection listener from tab to this
+do setupConnection = ->
+  chrome.runtime.onConnect.addListener (port) ->
+    console.log 'connected', port
+    connections[port.sender.tab.id] = undefined
+    console.log connections
+    port.onDisconnect.addListener (port) ->
+      console.log 'disconnected', port
+      delete connections[port.sender.tab.id]
+
+  # port = chrome.runtime.connect name: 'temps'
+  # port.postMessage('hi')
+
+  # chrome.runtime.onDisconnect.addListener (port) ->
+  #   console.log 'discnonected', port
+
+
+# holds positions of pinned tabs
 #
 # {
 #   id: {
@@ -14,9 +46,8 @@ wIndex = 0
 #   }
 # }
 pTable = {}
-
-
-
+windows = []
+wIndex = 0
 
 ###
 # @param window the window to check
@@ -44,16 +75,16 @@ chrome.runtime.onMessage.addListener ({command, data}, sender, sendResponse) ->
   {tab} = sender
 
   switch command
-    when "move left"
+    when "move-left"
       chrome.tabs.move tab.id, index: tab.index - 1, ->
 
-    when "move right"
+    when "move-right"
       chrome.tabs.move tab.id, index: tab.index + 1, ->
 
     when "extract"
       chrome.windows.create {tabId: tab.id}, ->
 
-    when "move down"
+    when "move-down"
       wIndex = if (wIndex - 1) < 0 then windows.length - 1 else wIndex - 1
       data =
         index: -1
@@ -77,7 +108,7 @@ chrome.runtime.onMessage.addListener ({command, data}, sender, sendResponse) ->
 
 
 
-    when "move up"
+    when "move-up"
 
       data =
         index: -1
@@ -135,7 +166,7 @@ chrome.runtime.onMessage.addListener ({command, data}, sender, sendResponse) ->
 
       # remove the current tab
       chrome.tabs.remove tab.id
-    when "move num"
+    when "move-num"
       # take into account the number of pinned tabs
 
       if data.tabIndex == -1
@@ -149,29 +180,6 @@ chrome.runtime.onMessage.addListener ({command, data}, sender, sendResponse) ->
               chrome.tabs.move tab.id, index: data.tabIndex, ->
           else
             chrome.tabs.move tab.id, index: data.tabIndex, ->
-
-
-
-
-
-connections = []
-
-
-# setup one way port connection listener from tab to this
-setupConnection = ->
-  chrome.runtime.onConnect.addListener (port) ->
-    console.log 'connected', port
-
-    port.onDisconnect.addListener (port) ->
-      console.log 'disconnected', port
-    # connections.push connections.sender.tab.id
-  # port = chrome.runtime.connect name: 'temps'
-  # port.postMessage('hi')
-
-  # chrome.runtime.onDisconnect.addListener (port) ->
-  #   console.log 'discnonected', port
-
-setupConnection()
 
 
 

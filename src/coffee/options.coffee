@@ -1,17 +1,4 @@
 keyHeldDown = 0
-commands =
-  "leader":     [220]           # \
-  "move-left":  [17, 65]   # CTRL + a
-  "move-right": [17, 68]   # CTRL + d
-  "move-down":  [17, 69]   # CTRL + s
-  "move-up":    [17, 81]   # CTRL + w
-  "extract":    [17, 83]   # CTRL + e
-  "pin":        [17, 80]   # CTRL + p
-  "incognito":  [17, 73]   # CTRL + i
-  "move-num":   [17]        # CTRL
-  "options":    [16, 191]  # SHIFT + /
-
-
 
 document.onreadystatechange =  () ->
   switch (state = document.readyState)
@@ -20,9 +7,9 @@ document.onreadystatechange =  () ->
       init()
 
 init = ->
-  chrome.storage.sync.get null, (items) ->
-    commands = if items.leader then items else commands
-    readied()
+  console.log @
+  @commands = chrome.extension.getBackgroundPage().commands
+  readied()
 
 readied = ->
   document.getElementById('save').addEventListener 'click', (evt) ->
