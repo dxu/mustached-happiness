@@ -16,6 +16,14 @@ chrome.storage.sync.get null, (items) ->
 
 window.connections = {}
 
+window.syncCommands = (commands) ->
+  window.commands = commands
+  # notify all connections that come in to update their commands
+  console.log 'hello m'
+  for id, port of connections
+    console.log 'hello'
+    port.postMessage commands: commands
+
 
 # setup one way port connection listener from tab to this
 do setupConnection = ->
