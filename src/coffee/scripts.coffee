@@ -31,10 +31,11 @@ getHeldComparison = (input) ->
 
 # input is the input
 send = (command, input, evt) ->
+  console.log command, input, evt, getHeldComparison(input)
   # if the type of element one is an array, that means there are multiple accepted inputs
   if isArray input[0]
     # loop through each of the inputs and set check
-    unless (input = (inp for inp in input when inp[1] == evt.keyCode)[0])
+    unless (inp for inp in input when evt.keyCode == getHeldComparison(inp)).length
       return
   else
     unless evt.keyCode == getHeldComparison(input)
@@ -49,6 +50,9 @@ send = (command, input, evt) ->
 # connect to the port
 port = chrome.runtime.connect name: "commands"
 port.onMessage.addListener (msg) ->
+  console.log msg
+  if(msg.commands)
+    commands = msg.commands
 
 escape = false
 
