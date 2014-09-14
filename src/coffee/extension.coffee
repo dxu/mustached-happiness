@@ -29,8 +29,11 @@ window.syncCommands = (commands) ->
 do setupConnection = ->
   chrome.runtime.onConnect.addListener (port) ->
     console.log 'connected', port
-    connections[port.sender.tab.id] = undefined
+    connections[port.sender.tab.id] = port
     console.log connections
+    # send a message to the port to update to current mappings
+    port.postMessage commands: window.commands
+
     port.onDisconnect.addListener (port) ->
       console.log 'disconnected', port
       delete connections[port.sender.tab.id]
