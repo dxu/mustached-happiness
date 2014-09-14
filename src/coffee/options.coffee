@@ -14,7 +14,6 @@ init = ->
 readied = ->
   document.getElementById('save').addEventListener 'click', (evt) ->
     saveInputs()
-    syncInputs()
   document.getElementById('undo').addEventListener 'click', (evt) ->
   for key, value of commands
     node = document.getElementById key
@@ -85,10 +84,21 @@ saveInputs = ->
        (second = cmd_input.nextElementSibling?.nextElementSibling)?.dataset.key,
        second?.nextElementSibling.nextElementSibling.dataset.key]
 
+  # remove null elements
+
+  # sync to cloud
+  syncInputs()
+
+
+
+
 
 
 syncInputs = () ->
-  chrome.storage.sync.set commands, ->
+  # notify the extensions.coffee
+  chrome.storage.sync.set commands, =>
+    chrome.extension.getBackgroundPage().syncCommands(@commands)
+
 
 resizeInput = (input) ->
   input?.size = input.value.length
