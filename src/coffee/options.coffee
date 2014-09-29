@@ -79,6 +79,10 @@ saveInputs = ->
       empty_input.value = ''
 
   for cmd_input in inputs
+
+    # # push the first
+    # if cmd_input.dataset.key then commands[cmd_input.id].push(cmd_input.dataset.key)
+
     commands[cmd_input.id] =
       [cmd_input.dataset.key,
        (second = cmd_input.nextElementSibling?.nextElementSibling)?.dataset.key,
@@ -93,6 +97,12 @@ saveInputs = ->
 
 
 
+# generalized div for a command input
+generateInputTemplate = (keyCode) ->
+  return "<input size='1' value='#{bindings[el] or (String.fromCharCode el)}'/>  <span class='separator'>+</span>"
+
+generateCommandTemplate = (command) ->
+  return "<div id='#{command}'></div>"
 
 syncInputs = () ->
   # notify the extensions.coffee
