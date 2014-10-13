@@ -1,16 +1,5 @@
 keyHeldDown = 0
-
-commands = [
-  'move-left'
-  'move-right'
-  'move-down'
-  'move-up'
-  'extract'
-  'pin'
-  'incognito'
-  'move-num'
-  'options'
-]
+commands = {}
 
 document.onreadystatechange =  () ->
   switch (state = document.readyState)
@@ -22,11 +11,24 @@ document.onreadystatechange =  () ->
 init = ->
   console.log @
   @commands = chrome.extension.getBackgroundPage().commands
+  console.log @commands, "hello3"
   # readied()
   readied2()
 
 readied2 = ->
-  console.log 'hello'
+  labels = document.getElementById('command-labels')
+  keybinds = document.getElementById('command-keys')
+  console.log 'hello', @commands
+  for command, keys of @commands
+    # generate label and put it in command-labels
+    labels.innerHTML += generateLabelTemplate(command)
+    console.log 'hihi', command, keys
+    keybinds.innerHTML += generateCommandTemplate(command, keys)
+
+
+
+
+
 
 readied = ->
   document.getElementById('save').addEventListener 'click', (evt) ->
@@ -115,16 +117,22 @@ generateTemplates = (command, keyCode) ->
   generateCommandTemplate(command)
   generateInputTemplate(command, keyCode)
 
-generateCommandTemplate = (command) ->
-  return "<div id='#{command}'></div>"
+generateCommandTemplate = (command, keys) ->
+  # create the command div and add all relevant inputs
+  commandEl = document.createElement('div')
+  commandEl.id = command
+  for key in keys
+    commandEl.innerHTML += generateInputTemplate(command, key)
+  removeLastSeparator(commandEl)
+  return commandEl.outerHTML
 
 # generalized div for a command input
 generateInputTemplate = (command, keyCode) ->
-  return "<input size='1' id='#{command}-input' value='#{bindings[keyCode] or (String.fromCharCode keyCode)}'/>  <span class='separator'>+</span>"
+  value = bindings[keyCode] or (String.fromCharCode keyCode)
+  return "<input size='#{value.length}' id='#{command}-input' value='#{value}'/>  <span class='separator'>+</span>"
 
-generateInputLabel = (command) ->
+generateLabelTemplate = (command) ->
   return "<label for='#{command}-input'>#{command.split('-').join(' ').toUpperCase()}</label>"
-
 
 removeLastSeparator = (el) ->
   (els = el.getElementsByClassName('separator'))[els.length - 1].parentElement.removeChild(els[els.length - 1])
