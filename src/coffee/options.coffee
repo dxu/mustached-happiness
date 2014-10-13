@@ -110,6 +110,10 @@ generateCommandTemplate = (command) ->
 generateInputTemplate = (command, keyCode) ->
   return "<input size='1' id='#{command}-input' value='#{bindings[keyCode] or (String.fromCharCode keyCode)}'/>  <span class='separator'>+</span>"
 
+generateInputLabel = (command) ->
+  return "<label for='#{command}-input'>#{command.split('-').join(' ').toUpperCase()}</label>"
+
+
 removeLastSeparator = (el) ->
   (els = el.getElementsByClassName('separator'))[els.length - 1].parentElement.removeChild(els[els.length - 1])
 
