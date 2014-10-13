@@ -1,5 +1,6 @@
+leader = 220  # \
+
 window.commands =
-  "leader":     [220]           # \
   "move-left":  [17, 65]   # CTRL + a
   "move-right": [17, 68]   # CTRL + d
   "move-down":  [17, 69]   # CTRL + s
@@ -7,8 +8,8 @@ window.commands =
   "extract":    [17, 83]   # CTRL + e
   "pin":        [17, 80]   # CTRL + p
   "incognito":  [17, 73]   # CTRL + i
-  "move-num":   [17]        # CTRL
   "options":    [16, 191]  # SHIFT + /
+  "move-num":   [17]        # CTRL
 
 chrome.storage.sync.get null, (items) ->
   window.commands = if items.leader then items else window.commands

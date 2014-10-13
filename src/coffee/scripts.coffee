@@ -1,5 +1,6 @@
+leader = 220  # \
+
 commands =
-  "leader":     [220]           # \
   "move-left":  [17, 65]   # CTRL + a
   "move-right": [17, 68]   # CTRL + d
   "move-down":  [17, 69]   # CTRL + s
