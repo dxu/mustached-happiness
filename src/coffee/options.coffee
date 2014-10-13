@@ -1,5 +1,17 @@
 keyHeldDown = 0
 
+commands = [
+  'move-left'
+  'move-right'
+  'move-down'
+  'move-up'
+  'extract'
+  'pin'
+  'incognito'
+  'move-num'
+  'options'
+]
+
 document.onreadystatechange =  () ->
   switch (state = document.readyState)
     # when 'interactive'
