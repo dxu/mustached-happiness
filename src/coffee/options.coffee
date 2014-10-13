@@ -10,7 +10,11 @@ document.onreadystatechange =  () ->
 init = ->
   console.log @
   @commands = chrome.extension.getBackgroundPage().commands
-  readied()
+  # readied()
+  readied2()
+
+readied2 = ->
+  console.log 'hello'
 
 readied = ->
   document.getElementById('save').addEventListener 'click', (evt) ->
@@ -95,28 +99,32 @@ saveInputs = ->
   syncInputs()
 
 
+generateTemplates = (command, keyCode) ->
+  generateCommandTemplate(command)
+  generateInputTemplate(command, keyCode)
+
+generateCommandTemplate = (command) ->
+  return "<div id='#{command}'></div>"
 
 # generalized div for a command input
-generateInputTemplate = (keyCode) ->
-  return "<input size='1' value='#{bindings[keyCode] or (String.fromCharCode keyCode)}'/>  <span class='separator'>+</span>"
+generateInputTemplate = (command, keyCode) ->
+  return "<input size='1' id='#{command}-input' value='#{bindings[keyCode] or (String.fromCharCode keyCode)}'/>  <span class='separator'>+</span>"
 
 removeLastSeparator = (el) ->
   (els = el.getElementsByClassName('separator'))[els.length - 1].parentElement.removeChild(els[els.length - 1])
 
 test = ->
-  document.body.innerHTML += generateInputTemplate(69)
-  document.body.innerHTML += generateInputTemplate(69)
-  document.body.innerHTML += generateInputTemplate(69)
-  document.body.innerHTML += generateInputTemplate(69)
-  document.body.innerHTML += generateInputTemplate(69)
-  document.body.innerHTML += generateInputTemplate(69)
-  document.body.innerHTML += generateInputTemplate(69)
+  document.body.innerHTML += generateInputTemplate()
+  document.body.innerHTML += generateInputTemplate()
+  document.body.innerHTML += generateInputTemplate()
+  document.body.innerHTML += generateInputTemplate()
+  document.body.innerHTML += generateInputTemplate()
+  document.body.innerHTML += generateInputTemplate()
+  document.body.innerHTML += generateInputTemplate()
   removeLastSeparator(document.body)
 
 
 
-generateCommandTemplate = (command) ->
-  return "<div id='#{command}'></div>"
 
 syncInputs = () ->
   # notify the extensions.coffee
