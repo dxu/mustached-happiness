@@ -5,6 +5,7 @@ document.onreadystatechange =  () ->
     # when 'interactive'
     when 'complete'
       init()
+      test()
 
 init = ->
   console.log @
@@ -95,11 +96,24 @@ saveInputs = ->
 
 
 
-
-
 # generalized div for a command input
 generateInputTemplate = (keyCode) ->
-  return "<input size='1' value='#{bindings[el] or (String.fromCharCode el)}'/>  <span class='separator'>+</span>"
+  return "<input size='1' value='#{bindings[keyCode] or (String.fromCharCode keyCode)}'/>  <span class='separator'>+</span>"
+
+removeLastSeparator = (el) ->
+  (els = el.getElementsByClassName('separator'))[els.length - 1].parentElement.removeChild(els[els.length - 1])
+
+test = ->
+  document.body.innerHTML += generateInputTemplate(69)
+  document.body.innerHTML += generateInputTemplate(69)
+  document.body.innerHTML += generateInputTemplate(69)
+  document.body.innerHTML += generateInputTemplate(69)
+  document.body.innerHTML += generateInputTemplate(69)
+  document.body.innerHTML += generateInputTemplate(69)
+  document.body.innerHTML += generateInputTemplate(69)
+  removeLastSeparator(document.body)
+
+
 
 generateCommandTemplate = (command) ->
   return "<div id='#{command}'></div>"
